@@ -1,7 +1,6 @@
 import java.util.List;
 
 public class DepthFirst {
-
     public static boolean searchPath(int[][] maze, int x, int y
             , List<Integer> path) {
 
@@ -48,5 +47,4 @@ public class DepthFirst {
         }
         return false;
     }
-
 }
