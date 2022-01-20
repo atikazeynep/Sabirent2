@@ -82,6 +82,11 @@ public class View extends JFrame {
         // draw the ball on path
         g.setColor(Color.RED);
         g.fillOval(indexX* 30, indexY * 30, 30, 30);
+
+        if(maze[indexY][indexX] == 9){
+            JOptionPane.showMessageDialog(null,
+                    "Congratulations! You won!", null, JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     @Override
@@ -89,31 +94,27 @@ public class View extends JFrame {
         if (ke.getID() != KeyEvent.KEY_PRESSED) {
             return;
         }
-        if (ke.getKeyCode() == KeyEvent.VK_RIGHT && maze[indexY][indexX + 1] != 1){
-            if(indexX >= 0 && indexX < maze[0].length){
+        if (ke.getKeyCode() == KeyEvent.VK_RIGHT){
+            if(indexX >= 0 && indexX < maze[0].length && (maze[indexY][indexX + 1] != 1)){
                 indexX++;
             }
         }
-        else if (ke.getKeyCode() == KeyEvent.VK_LEFT && maze[indexY][indexX - 1] != 1) {
-            if(indexX > 0 && indexX <= maze[0].length){
+        else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+            if(indexX > 0 && indexX <= maze[0].length && (maze[indexY][indexX - 1] != 1)){
                 indexX--;
             }
         }
         else if(ke.getKeyCode() == KeyEvent.VK_DOWN){
-            if(indexY >= 0 && indexY < maze.length && maze[indexY + 1][indexX] != 1){
+            if(indexY >= 0 && indexY < maze.length && (maze[indexY + 1][indexX] != 1)){
                 indexY++;
             }
         }
-        else if(ke.getKeyCode() == KeyEvent.VK_UP && maze[indexY - 1][indexX] != 1){
-            if(indexY > 0 && indexY <= maze.length){
+        else if(ke.getKeyCode() == KeyEvent.VK_UP){
+            if(indexY > 0 && indexY <= maze.length && (maze[indexY - 1][indexX] != 1)){
                 indexY--;
             }
         }
 
-        if(maze[indexY][indexX] == 9){
-            JOptionPane.showMessageDialog(null,
-                    "Congratulations! You won!", null, JOptionPane.INFORMATION_MESSAGE);
-        }
         repaint();
     }
 
