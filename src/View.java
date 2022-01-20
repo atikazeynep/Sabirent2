@@ -40,12 +40,17 @@ public class View extends JFrame {
 
     private final List<Integer> path = new ArrayList<Integer>();
     private int pathIndex;
+    int indexX;
+    int indexY;
 
     public View() {
         setTitle("Simple Maze Solver");
         setSize(640, 480);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        indexX = 0;
+        indexY = 0;
 
         //DepthFirst2.searchPath(maze, 1, 1, path);
         DepthFirst.searchPath(maze, 1, 1, path);
@@ -58,7 +63,7 @@ public class View extends JFrame {
 //                update();
 //                repaint();
 //            }
-//        }, 100, 500);
+//        }, 100, 500);        
     }
 
     public void update() {
@@ -102,7 +107,7 @@ public class View extends JFrame {
         int pathX = path.get(pathIndex);
         int pathY = path.get(pathIndex + 1);
         g.setColor(Color.RED);
-        g.fillOval(pathX * 30, pathY * 30, 30, 30);
+        g.fillOval(indexX * 30, indexY * 30, 30, 30);
     }
 
     @Override
@@ -110,16 +115,24 @@ public class View extends JFrame {
         if (ke.getID() != KeyEvent.KEY_PRESSED) {
             return;
         }
-        if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
-            pathIndex -= 2;
-            if (pathIndex < 0) {
-                pathIndex = 0;
+        if (ke.getKeyCode() == KeyEvent.VK_RIGHT){
+            if(indexX >= 0 && indexX < maze.length){
+                indexX++;
             }
         }
         else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
-            pathIndex += 2;
-            if (pathIndex > path.size() - 2) {
-                pathIndex = path.size() - 2;
+            if(indexX > 0 && indexX <= maze.length){
+                indexX--;
+            }
+        }
+        else if(ke.getKeyCode() == KeyEvent.VK_DOWN){
+            if(indexY >= 0 && indexY < maze[0].length){
+                indexY++;
+            }
+        }
+        else if(ke.getKeyCode() == KeyEvent.VK_UP){
+            if(indexY > 0 && indexY <= maze[0].length){
+                indexY--;
             }
         }
         repaint();
