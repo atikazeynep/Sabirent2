@@ -124,9 +124,9 @@ public class View extends JLabel implements KeyListener {
                 indexY--;
             }
         }
+
         repaint();
     }
-
     public void keyReleased(KeyEvent e) {
 
     }
