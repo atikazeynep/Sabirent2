@@ -66,11 +66,6 @@ public class View extends JLabel implements KeyListener {
     };
 
     public View() {
-        /*setTitle("Simple Maze Solver");
-        setSize(1200, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-*/
         indexX = 0;
         indexY = 0;
     }
@@ -135,14 +130,4 @@ public class View extends JLabel implements KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
-
-    /*public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                View view = new View();
-                view.setVisible(true);
-            }
-        });
-    }*/
 }
