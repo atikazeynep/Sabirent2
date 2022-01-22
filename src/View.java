@@ -70,7 +70,6 @@ public class View extends JLabel implements KeyListener {
         indexY = 0;
     }
 
-    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         // draw the maze
