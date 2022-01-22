@@ -99,12 +99,6 @@ public class View extends JLabel implements KeyListener {
             JOptionPane.showMessageDialog(null,
                     "Congratulations! You won!", null, JOptionPane.INFORMATION_MESSAGE);
         }
-        g.fillOval(indexX* 30, indexY * 30, 30, 30);
-
-        if(maze[indexY][indexX] == 9){
-            JOptionPane.showMessageDialog(null,
-                    "Congratulations! You won!", null, JOptionPane.INFORMATION_MESSAGE);
-        }
     }
 
     public void keyTyped(KeyEvent e) {
