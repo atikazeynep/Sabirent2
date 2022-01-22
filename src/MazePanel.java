@@ -1,12 +1,16 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import javax.swing.*;
 
-public class View extends JLabel implements KeyListener {
+public class MazePanel extends JPanel implements KeyListener {
 
     private int indexX;
     private int indexY;
+    ArrayList<Point> coinList;
+    int score;
+    JLabel scoreTable;
     private int[][] maze = {
             {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1},
@@ -65,13 +69,45 @@ public class View extends JLabel implements KeyListener {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,9},
     };
 
-    public View() {
+    public MazePanel() {
         indexX = 0;
         indexY = 0;
+
+        coinList = new ArrayList<Point>();
+        createCoins();
+        score = 0;
+        scoreTable = new JLabel("Score:" + score);
+        this.add(scoreTable);
+    }
+
+    class Point{
+        int x;
+        int y;
+
+        public Point(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    public void createCoins(){
+        for(int i = 0; i < 20; i++){
+            int coinX = 0;
+            int coinY = 0;
+
+            do {
+                coinX = (int)(Math.random() * 45);
+                coinY = (int)(Math.random() * 45);
+            }while(maze[coinY][coinX] == 1);
+
+
+            coinList.add(new Point(coinX, coinY));
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         // draw the maze
         for (int row = 0; row < maze.length; row++) {
             for (int col = 0; col < maze[0].length; col++) {
@@ -92,6 +128,11 @@ public class View extends JLabel implements KeyListener {
         if(maze[indexY][indexX] == 9){
             JOptionPane.showMessageDialog(null,
                     "Congratulations! You won!", null, JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        for(int i = 0; i < coinList.size(); i++){
+            g.setColor(Color.YELLOW);
+            g.fillOval(coinList.get(i).x * 15, coinList.get(i).y * 15, 10, 10);
         }
     }
 
@@ -121,6 +162,15 @@ public class View extends JLabel implements KeyListener {
         else if(ke.getKeyCode() == KeyEvent.VK_UP){
             if(indexY > 0 && indexY <= maze.length && (maze[indexY - 1][indexX] != 1)){
                 indexY--;
+            }
+        }
+
+        for(int i = 0; i < coinList.size(); i++){
+            if(coinList.get(i).x == indexX && coinList.get(i).y == indexY){
+                coinList.remove(i);
+                score++;
+                i--;
+                scoreTable.setText("Score: " + score);
             }
         }
 
