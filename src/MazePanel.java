@@ -9,9 +9,12 @@ public class MazePanel extends JPanel implements KeyListener {
     private int indexX;
     private int indexY;
     ArrayList<Point> coinList;
+    ArrayList<Point> tirrekList;
     int score;
     JLabel scoreTable;
-    private int[][] maze = {
+    JLabel healthTable;
+    int health;
+    private final int[][] maze = {
             {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1},
             {1,1,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,1,1},
@@ -75,12 +78,27 @@ public class MazePanel extends JPanel implements KeyListener {
 
         coinList = new ArrayList<Point>();
         createCoins();
+        tirrekList = new ArrayList<Point>();
+        createTirreks();
         score = 0;
         scoreTable = new JLabel("Score:" + score);
+        healthTable = new JLabel("Health" + health);
         this.add(scoreTable);
+        this.add(healthTable);
+        health = 5;
     }
 
-    class Point{
+    public boolean isThereTirrek(){
+        for (Point point : tirrekList) {
+            if (indexX == point.x && indexY == point.y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static class Point{
         int x;
         int y;
 
@@ -92,8 +110,8 @@ public class MazePanel extends JPanel implements KeyListener {
 
     public void createCoins(){
         for(int i = 0; i < 20; i++){
-            int coinX = 0;
-            int coinY = 0;
+            int coinX;
+            int coinY;
 
             do {
                 coinX = (int)(Math.random() * 45);
@@ -105,6 +123,21 @@ public class MazePanel extends JPanel implements KeyListener {
         }
     }
 
+    public void createTirreks(){
+        for(int i = 0; i < 20; i++){
+            int tirrekX;
+            int tirrekY;
+
+            do {
+                tirrekX = (int)(Math.random() * maze[0].length);
+                tirrekY = (int)(Math.random() * maze.length);
+            }while(maze[tirrekY][tirrekX] == 1);
+
+
+            tirrekList.add(new Point(tirrekX, tirrekY));
+        }
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -112,9 +145,10 @@ public class MazePanel extends JPanel implements KeyListener {
         for (int row = 0; row < maze.length; row++) {
             for (int col = 0; col < maze[0].length; col++) {
                 Color color;
-                switch (maze[row][col]) {
-                    case 1 : color = Color.BLACK; break;
-                    default : color = Color.WHITE;
+                if (maze[row][col] == 1) {
+                    color = Color.BLACK;
+                } else {
+                    color = Color.WHITE;
                 }
                 g.setColor(color);
                 g.fillRect(15 * col, 15 * row, 15, 15);
@@ -122,7 +156,7 @@ public class MazePanel extends JPanel implements KeyListener {
         }
 
         // draw the ball on path
-        g.setColor(Color.RED);
+        g.setColor(Color.CYAN);
         g.fillOval(indexX * 15, indexY * 15, 15, 15);
 
         if(maze[indexY][indexX] == 9){
@@ -130,10 +164,19 @@ public class MazePanel extends JPanel implements KeyListener {
                     "Congratulations! You won!", null, JOptionPane.INFORMATION_MESSAGE);
         }
 
-        for(int i = 0; i < coinList.size(); i++){
+        //draw the coins;
+        for (Point point : coinList) {
             g.setColor(Color.YELLOW);
-            g.fillOval(coinList.get(i).x * 15, coinList.get(i).y * 15, 10, 10);
+            g.fillOval(point.x * 15, point.y * 15, 10, 10);
         }
+
+        //draw the tirreks
+
+        for (Point point : tirrekList) {
+            g.setColor(Color.RED);
+            g.fillOval(point.x * 15, point.y * 15, 15, 15);
+        }
+
     }
 
     public void keyTyped(KeyEvent e) {
@@ -146,22 +189,60 @@ public class MazePanel extends JPanel implements KeyListener {
         }
         if (ke.getKeyCode() == KeyEvent.VK_RIGHT){
             if(indexX >= 0 && indexX < maze[0].length && (maze[indexY][indexX + 1] != 1)){
-                indexX++;
+                if(!isThereTirrek())
+                    indexX++;
+                else
+                    health--;
             }
         }
         else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
             if(indexX > 0 && indexX <= maze[0].length && (maze[indexY][indexX - 1] != 1)){
-                indexX--;
+                if(!isThereTirrek())
+                    indexX--;
+                else
+                    health--;
             }
         }
         else if(ke.getKeyCode() == KeyEvent.VK_DOWN){
             if(indexY >= 0 && indexY < maze.length && (maze[indexY + 1][indexX] != 1)){
-                indexY++;
+                if(!isThereTirrek())
+                    indexY++;
+                else
+                    health--;
             }
         }
         else if(ke.getKeyCode() == KeyEvent.VK_UP){
             if(indexY > 0 && indexY <= maze.length && (maze[indexY - 1][indexX] != 1)){
-                indexY--;
+                if(!isThereTirrek())
+                    indexY--;
+                else
+                    health--;
+            }
+        }
+        else if(ke.getKeyCode() == KeyEvent.VK_0){
+            //remove the tirrek if player press the space key appropriately
+            if(indexY > 0 && indexY <= maze.length && (maze[indexY - 1][indexX] != 1)){
+                for(int i = 0; i < tirrekList.size(); i++){
+                    if((tirrekList.get(i).x == indexX + 1 || tirrekList.get(i).x == indexX - 1 ||
+                            tirrekList.get(i).x == indexX) && (tirrekList.get(i).y == (indexY + 1)
+                            || tirrekList.get(i).y == (indexY - 1) || tirrekList.get(i).y == indexY)){
+                        tirrekList.remove(i);
+                        score++;
+                        i--;
+                        scoreTable.setText("Score: " + score);
+                    }
+                }
+            }
+        }
+
+        if(isThereTirrek()){
+            for(int i = 0; i < tirrekList.size(); i++){
+                if(tirrekList.get(i).x == indexX && tirrekList.get(i).y == indexY){
+                    tirrekList.remove(i);
+                    health--;
+                    i--;
+                    healthTable.setText("Health: " + health);
+                }
             }
         }
 
