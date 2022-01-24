@@ -221,7 +221,7 @@ public class MazePanel extends JPanel implements KeyListener {
         }
         else if(ke.getKeyCode() == KeyEvent.VK_0){
             //remove the tirrek if player press the space key appropriately
-            if(indexY > 0 && indexY <= maze.length && (maze[indexY - 1][indexX] != 1)){
+            if(indexY > 0 && indexY <= maze.length){
                 for(int i = 0; i < tirrekList.size(); i++){
                     if((tirrekList.get(i).x == indexX + 1 || tirrekList.get(i).x == indexX - 1 ||
                             tirrekList.get(i).x == indexX) && (tirrekList.get(i).y == (indexY + 1)
