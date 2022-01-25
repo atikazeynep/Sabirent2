@@ -8,12 +8,12 @@ public class MazePanel extends JPanel implements KeyListener {
 
     private int indexX;
     private int indexY;
-    ArrayList<Point> coinList;
-    ArrayList<Point> tirrekList;
-    int score;
-    JLabel scoreTable;
-    JLabel healthTable;
-    int health;
+    private ArrayList<Point> coinList;
+    private ArrayList<Point> tirrekList;
+    private int score;
+    private JLabel scoreTable;
+    private JLabel healthTable;
+    private int health;
     private final int[][] maze = {
             {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1},
@@ -76,16 +76,28 @@ public class MazePanel extends JPanel implements KeyListener {
         indexX = 0;
         indexY = 0;
 
-        coinList = new ArrayList<Point>();
+        coinList = new ArrayList<>();
         createCoins();
-        tirrekList = new ArrayList<Point>();
+        tirrekList = new ArrayList<>();
         createTirreks();
+
         score = 0;
-        scoreTable = new JLabel("Score:" + score);
-        healthTable = new JLabel("Health" + health);
-        this.add(scoreTable);
-        this.add(healthTable);
         health = 5;
+        scoreTable = new JLabel("Score: " + score);
+        healthTable = new JLabel("Health: " + health);
+        scoreTable.setForeground(Color.BLUE);
+        healthTable.setForeground(Color.BLUE);
+        Font font = new Font(scoreTable.getFont().getName(), Font.BOLD, scoreTable.getFont().getSize());
+        scoreTable.setFont(font);
+        healthTable.setFont(font);
+    }
+
+    public JLabel getScoreTable() {
+        return scoreTable;
+    }
+
+    public JLabel getHealthTable() {
+        return healthTable;
     }
 
     public boolean isThereTirrek(){
@@ -94,18 +106,7 @@ public class MazePanel extends JPanel implements KeyListener {
                 return true;
             }
         }
-
         return false;
-    }
-
-    static class Point{
-        int x;
-        int y;
-
-        public Point(int x, int y){
-            this.x = x;
-            this.y = y;
-        }
     }
 
     public void createCoins(){
@@ -114,10 +115,9 @@ public class MazePanel extends JPanel implements KeyListener {
             int coinY;
 
             do {
-                coinX = (int)(Math.random() * 45);
-                coinY = (int)(Math.random() * 45);
+                coinX = (int)(Math.random() * 44) + 1;
+                coinY = (int)(Math.random() * 44) + 1;
             }while(maze[coinY][coinX] == 1);
-
 
             coinList.add(new Point(coinX, coinY));
         }
@@ -171,7 +171,6 @@ public class MazePanel extends JPanel implements KeyListener {
         }
 
         //draw the tirreks
-
         for (Point point : tirrekList) {
             g.setColor(Color.RED);
             g.fillOval(point.x * 15, point.y * 15, 15, 15);
@@ -227,13 +226,12 @@ public class MazePanel extends JPanel implements KeyListener {
                             tirrekList.get(i).x == indexX) && (tirrekList.get(i).y == (indexY + 1)
                             || tirrekList.get(i).y == (indexY - 1) || tirrekList.get(i).y == indexY)){
                         tirrekList.remove(i);
-                        score++;
                         i--;
-                        scoreTable.setText("Score: " + score);
                     }
                 }
             }
         }
+
 
         if(isThereTirrek()){
             for(int i = 0; i < tirrekList.size(); i++){
@@ -249,7 +247,7 @@ public class MazePanel extends JPanel implements KeyListener {
         for(int i = 0; i < coinList.size(); i++){
             if(coinList.get(i).x == indexX && coinList.get(i).y == indexY){
                 coinList.remove(i);
-                score++;
+                score+=5;
                 i--;
                 scoreTable.setText("Score: " + score);
             }
@@ -257,6 +255,7 @@ public class MazePanel extends JPanel implements KeyListener {
 
         repaint();
     }
+
     public void keyReleased(KeyEvent e) {
 
     }

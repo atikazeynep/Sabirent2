@@ -6,12 +6,19 @@ public class Game {
         JFrame mazeFrame = new JFrame();
         MazePanel mazePanel = new MazePanel();
 
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.PINK);
+        panel.setPreferredSize(new Dimension(691, 24));
+        panel.add(mazePanel.getScoreTable());
+        panel.add(mazePanel.getHealthTable());
+
         mazeFrame.setTitle("ŞABİRENT");
         mazeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //mazeFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mazeFrame.setSize(new Dimension(mazePanel.getWidth(), mazePanel.getHeight()));
-        mazePanel.setPreferredSize(new Dimension(1000, 828));
-        mazeFrame.getContentPane().add(mazePanel);
+        mazePanel.setPreferredSize(new Dimension(691, 828));
+        mazeFrame.setLayout(new BorderLayout());
+        mazeFrame.getContentPane().add(panel, BorderLayout.NORTH);
+        mazeFrame.add(mazePanel, BorderLayout.CENTER);
         mazeFrame.addKeyListener(mazePanel);
         mazeFrame.pack();
 
